@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141024105045) do
+ActiveRecord::Schema.define(version: 20141031065224) do
 
   create_table "oauth_access_grants", force: true do |t|
     t.integer  "resource_owner_id", null: false
@@ -48,9 +48,22 @@ ActiveRecord::Schema.define(version: 20141024105045) do
     t.text     "redirect_uri", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "owner_id"
+    t.string   "owner_type"
   end
 
+  add_index "oauth_applications", ["owner_id", "owner_type"], name: "index_oauth_applications_on_owner_id_and_owner_type"
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true
+
+  create_table "plays", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "quiz_id"
+    t.boolean  "correct"
+    t.integer  "score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "reply"
+  end
 
   create_table "quizzes", force: true do |t|
     t.string   "question"
@@ -72,7 +85,7 @@ ActiveRecord::Schema.define(version: 20141024105045) do
   end
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "", null: false
+    t.string   "email"
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -82,14 +95,15 @@ ActiveRecord::Schema.define(version: 20141024105045) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "uid"
+    t.string   "provider"
+    t.string   "password"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "provider"
-    t.string   "uid"
+    t.string   "profileimage"
     t.string   "name"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["uid"], name: "index_users_on_uid", unique: true
 
 end
